@@ -18,7 +18,7 @@ export function AboutSection() {
       <div className="about-copy">
         <span className="eyebrow">Who we are</span>
         <h2>Safety solutions that <em>feel like home.</em></h2>
-        <p>Bird Service Control helps Rajkot families and businesses protect balconies, windows, terraces and open spaces without compromising the look of their property.</p>
+        <p>Bird Service Control helps Patna families and businesses protect balconies, windows, terraces and open spaces without compromising the look of their property.</p>
         <p>From discreet invisible grills to durable pigeon nets, every installation is measured, planned and completed by our experienced local team.</p>
         <div className="metrics">
           {metrics.map(({ icon: Icon, value, label }) => <div key={label}><Icon /><strong>{value}</strong><span>{label}</span></div>)}

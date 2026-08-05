@@ -21,7 +21,7 @@ export function Navbar() {
       <nav className="nav container" aria-label="Main navigation">
         <Link className="brand" href="/" onClick={close}>
           <span className="brand-mark">B</span>
-          <span>Bird <b>Service</b><small>CONTROL · RAJKOT</small></span>
+          <span>Bird <b>Service</b><small>CONTROL · Patna</small></span>
         </Link>
         <button className="mobile-menu" onClick={() => setOpen((value) => !value)} aria-label="Toggle navigation" aria-expanded={open}>
           {open ? <FiX /> : <FiMenu />}
