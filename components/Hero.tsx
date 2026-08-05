@@ -10,7 +10,7 @@ export function Hero() {
       <div className="hero-overlay" />
       <div className="container hero-content">
         <motion.div initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-          <p className="hero-kicker"><span /> Rajkot&apos;s trusted safety partner</p>
+          <p className="hero-kicker"><span /> Patna&apos;s trusted safety partner</p>
           <h1>Protect your space.<br /><em>Keep it beautiful.</em></h1>
           <p className="hero-description">Expert bird net, invisible grill, child safety and artificial grass installation for safer, more beautiful living.</p>
           <div className="hero-actions">
