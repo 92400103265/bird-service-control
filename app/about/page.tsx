@@ -29,14 +29,14 @@ export default function AboutPage() {
       <main className="inner-page">
         <section className="page-banner">
           <span className="eyebrow">About Bird Service Control</span>
-          <h1>Safety that blends into <em>beautiful spaces.</em></h1>
+          <h1>Safety that blends into <em>www.invisiblesafetygrillpatna.com</em></h1>
         </section>
         <section className="about-long section">
           <div className="about-long-copy">
             <span className="eyebrow">Welcome to Bird Service Control</span>
             <h2>Reliable protection, thoughtfully installed.</h2>
             <p>
-              We are one of Rajkot&apos;s trusted companies for Bird Net Installation, Invisible
+              We are one of Patna&apos;s trusted companies for Bird Net Installation, Invisible
               Grill Installation, Child Safety Net, Artificial Grass, Balcony Safety Solutions
               and Pigeon Protection Services.
             </p>
