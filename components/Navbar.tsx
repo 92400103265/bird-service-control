@@ -3,21 +3,19 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-
 import {
   FiMenu,
-  FiPhone,
   FiX,
+  FiPhone,
+  FiChevronRight,
 } from "react-icons/fi";
-
 import { FaWhatsapp } from "react-icons/fa";
 
 /* =========================================================
-   CONTACT DETAILS
+   CONTACT INFORMATION
 ========================================================= */
 
 const PHONE_NUMBER = "7065953252";
-
 const PHONE_LINK = "+917065953252";
 
 const WHATSAPP_NUMBER = "917065953252";
@@ -30,33 +28,33 @@ const WHATSAPP_URL =
   `?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
 
 /* =========================================================
-   NAVIGATION LINKS
+   NAVIGATION
 ========================================================= */
 
-const links = [
+const NAV_LINKS = [
   {
-    href: "/",
     label: "Home",
+    href: "/",
   },
   {
-    href: "/#services",
     label: "Services",
+    href: "/#services",
   },
   {
-    href: "/about",
     label: "About",
+    href: "/about",
   },
   {
-    href: "/#why-us",
     label: "Why Us",
+    href: "/#why-us",
   },
   {
-    href: "/#gallery",
     label: "Gallery",
+    href: "/#gallery",
   },
   {
-    href: "/contact",
     label: "Contact",
+    href: "/contact",
   },
 ];
 
@@ -65,17 +63,8 @@ const links = [
 ========================================================= */
 
 export function Navbar() {
-  const [open, setOpen] = useState(false);
-
-  const [scrolled, setScrolled] = useState(false);
-
-  /* =======================================================
-     CLOSE MENU
-  ======================================================= */
-
-  const close = () => {
-    setOpen(false);
-  };
+  const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   /* =======================================================
      SCROLL DETECTION
@@ -83,57 +72,42 @@ export function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 30);
     };
 
     handleScroll();
 
-    window.addEventListener(
-      "scroll",
-      handleScroll,
-      {
-        passive: true,
-      }
-    );
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
-      window.removeEventListener(
-        "scroll",
-        handleScroll
-      );
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
   /* =======================================================
-     CLOSE MENU WHEN ESC IS PRESSED
+     CLOSE MENU WHEN SCREEN BECOMES DESKTOP
   ======================================================= */
 
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setOpen(false);
+    const handleResize = () => {
+      if (window.innerWidth > 900) {
+        setIsOpen(false);
       }
     };
 
-    window.addEventListener(
-      "keydown",
-      handleKeyDown
-    );
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener(
-        "keydown",
-        handleKeyDown
-      );
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   /* =======================================================
-     PREVENT BODY SCROLL WHEN MOBILE MENU IS OPEN
+     PREVENT BODY SCROLL WHEN MENU OPEN
   ======================================================= */
 
   useEffect(() => {
-    if (open) {
+    if (isOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -142,751 +116,801 @@ export function Navbar() {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [open]);
+  }, [isOpen]);
+
+  /* =======================================================
+     CLOSE MENU
+  ======================================================= */
+
+  const closeMenu = () => {
+    setIsOpen(false);
+  };
 
   return (
     <>
-      {/* =====================================================
-          HEADER
-      ====================================================== */}
-
-      <motion.header
-        className={`site-header ${
-          scrolled ? "is-scrolled" : ""
+      <header
+        className={`shweta-navbar ${
+          isScrolled ? "shweta-navbar-scrolled" : ""
         }`}
-        initial={{
-          y: -80,
-          opacity: 0,
-        }}
-        animate={{
-          y: 0,
-          opacity: 1,
-        }}
-        transition={{
-          duration: 0.6,
-          ease: "easeOut",
-        }}
-        style={{
-          backgroundColor: scrolled
-            ? "rgba(4, 27, 21, 0.97)"
-            : "rgba(4, 27, 21, 0.90)",
-
-          boxShadow: scrolled
-            ? "0 10px 30px rgba(0, 0, 0, 0.25)"
-            : "0 5px 20px rgba(0, 0, 0, 0.08)",
-
-          backdropFilter:
-            "blur(16px)",
-        }}
       >
-        {/* ===================================================
-            NAV
-        ==================================================== */}
+        <div className="shweta-navbar-container">
 
-        <nav
-          className="nav container"
-          aria-label="Main navigation"
-        >
-          {/* ===============================================
+          {/* =================================================
               LOGO
-          ================================================ */}
+          ================================================= */}
 
           <Link
-            className="brand"
             href="/"
-            onClick={close}
+            className="shweta-navbar-brand"
+            onClick={closeMenu}
             aria-label="Shweta Invisible Grill Home"
           >
-            {/* LOGO ICON */}
+            <span className="shweta-navbar-logo">
+              S
+            </span>
 
-            <motion.span
-              className="brand-mark"
-              whileHover={{
-                scale: 1.08,
-                rotate: 3,
+            <span className="shweta-navbar-brand-text">
+              <strong>
+                Shweta <span>Invisible Grill</span>
+              </strong>
+
+              <small>
+                SAFETY GRILLS & NETS • GURUGRAM
+              </small>
+            </span>
+          </Link>
+
+          {/* =================================================
+              DESKTOP NAVIGATION
+          ================================================= */}
+
+          <nav
+            className="shweta-desktop-nav"
+            aria-label="Main navigation"
+          >
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="shweta-nav-link"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* =================================================
+              DESKTOP PHONE
+          ================================================= */}
+
+          <a
+            href={`tel:${PHONE_LINK}`}
+            className="shweta-navbar-phone"
+            aria-label={`Call Shweta Invisible Grill at ${PHONE_NUMBER}`}
+          >
+            <FiPhone aria-hidden="true" />
+
+            <span>{PHONE_NUMBER}</span>
+          </a>
+
+          {/* =================================================
+              MOBILE MENU BUTTON
+          ================================================= */}
+
+          <button
+            type="button"
+            className="shweta-mobile-menu-button"
+            onClick={() => setIsOpen((previous) => !previous)}
+            aria-label={
+              isOpen ? "Close navigation menu" : "Open navigation menu"
+            }
+            aria-expanded={isOpen}
+          >
+            {isOpen ? (
+              <FiX aria-hidden="true" />
+            ) : (
+              <FiMenu aria-hidden="true" />
+            )}
+          </button>
+        </div>
+      </header>
+
+      {/* =====================================================
+          MOBILE MENU
+      ====================================================== */}
+
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            {/* BACKDROP */}
+
+            <motion.div
+              className="shweta-mobile-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={closeMenu}
+            />
+
+            {/* MENU */}
+
+            <motion.div
+              className="shweta-mobile-menu"
+              initial={{
+                opacity: 0,
+                y: -20,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              exit={{
+                opacity: 0,
+                y: -20,
               }}
               transition={{
                 duration: 0.25,
               }}
             >
-              S
-            </motion.span>
+              {/* MOBILE MENU HEADER */}
 
-            {/* BRAND TEXT */}
+              <div className="shweta-mobile-menu-header">
+                <div>
+                  <strong>Menu</strong>
 
-            <div className="brand-text">
-              <span>
-                Shweta{" "}
-                <b>
-                  Invisible Grill
-                </b>
-              </span>
+                  <span>
+                    Shweta Invisible Grill
+                  </span>
+                </div>
 
-              <small className="brand-tagline">
-                Safety Grills & Nets · Gurugram
-              </small>
-            </div>
-          </Link>
-
-          {/* ===============================================
-              MOBILE MENU BUTTON
-          ================================================ */}
-
-          <motion.button
-            type="button"
-            className="mobile-menu"
-            onClick={() =>
-              setOpen((value) => !value)
-            }
-            aria-label={
-              open
-                ? "Close navigation"
-                : "Open navigation"
-            }
-            aria-expanded={open}
-            whileTap={{
-              scale: 0.92,
-            }}
-          >
-            <AnimatePresence
-              mode="wait"
-              initial={false}
-            >
-              {open ? (
-                <motion.span
-                  key="close"
-                  initial={{
-                    opacity: 0,
-                    rotate: -90,
-                    scale: 0.7,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    rotate: 0,
-                    scale: 1,
-                  }}
-                  exit={{
-                    opacity: 0,
-                    rotate: 90,
-                    scale: 0.7,
-                  }}
-                  transition={{
-                    duration: 0.2,
-                  }}
+                <button
+                  type="button"
+                  onClick={closeMenu}
+                  className="shweta-mobile-close"
+                  aria-label="Close menu"
                 >
                   <FiX />
-                </motion.span>
-              ) : (
-                <motion.span
-                  key="menu"
-                  initial={{
-                    opacity: 0,
-                    rotate: 90,
-                    scale: 0.7,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    rotate: 0,
-                    scale: 1,
-                  }}
-                  exit={{
-                    opacity: 0,
-                    rotate: -90,
-                    scale: 0.7,
-                  }}
-                  transition={{
-                    duration: 0.2,
-                  }}
-                >
-                  <FiMenu />
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </motion.button>
+                </button>
+              </div>
 
-          {/* ===============================================
-              DESKTOP NAVIGATION
-          ================================================ */}
+              {/* MOBILE LINKS */}
 
-          <div className="nav-links">
-            {links.map(
-              (
-                link,
-                index
-              ) => (
-                <motion.div
-                  key={link.label}
-                  initial={{
-                    opacity: 0,
-                    y: -10,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                  }}
-                  transition={{
-                    delay:
-                      0.1 +
-                      index * 0.05,
-                  }}
-                >
-                  <Link
-                    href={link.href}
-                    onClick={close}
-                  >
-                    {link.label}
-                  </Link>
-                </motion.div>
-              )
-            )}
-
-            {/* =============================================
-                PHONE
-            ============================================== */}
-
-            <a
-              className="nav-call"
-              href={`tel:${PHONE_LINK}`}
-              onClick={close}
-              aria-label={`Call ${PHONE_NUMBER}`}
-            >
-              <FiPhone />
-
-              <span>
-                {PHONE_NUMBER}
-              </span>
-            </a>
-
-          </div>
-        </nav>
-
-        {/* =================================================
-            MOBILE MENU
-        ================================================== */}
-
-        <AnimatePresence>
-          {open && (
-            <>
-              {/* BACKDROP */}
-
-              <motion.div
-                className="mobile-menu-backdrop"
-                initial={{
-                  opacity: 0,
-                }}
-                animate={{
-                  opacity: 1,
-                }}
-                exit={{
-                  opacity: 0,
-                }}
-                transition={{
-                  duration: 0.25,
-                }}
-                onClick={close}
-              />
-
-              {/* MENU */}
-
-              <motion.div
-                className="nav-links is-open"
-                initial={{
-                  opacity: 0,
-                  y: -20,
-                  scale: 0.98,
-                }}
-                animate={{
-                  opacity: 1,
-                  y: 0,
-                  scale: 1,
-                }}
-                exit={{
-                  opacity: 0,
-                  y: -20,
-                  scale: 0.98,
-                }}
-                transition={{
-                  duration: 0.25,
-                  ease: "easeOut",
-                }}
+              <nav
+                className="shweta-mobile-links"
+                aria-label="Mobile navigation"
               >
-                {/* MOBILE LINKS */}
-
-                {links.map(
-                  (
-                    link,
-                    index
-                  ) => (
-                    <motion.div
-                      key={link.label}
-                      initial={{
-                        opacity: 0,
-                        x: -20,
-                      }}
-                      animate={{
-                        opacity: 1,
-                        x: 0,
-                      }}
-                      transition={{
-                        delay:
-                          0.05 +
-                          index * 0.06,
-                      }}
+                {NAV_LINKS.map((link, index) => (
+                  <motion.div
+                    key={link.href}
+                    initial={{
+                      opacity: 0,
+                      x: -15,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      x: 0,
+                    }}
+                    transition={{
+                      delay: index * 0.05,
+                    }}
+                  >
+                    <Link
+                      href={link.href}
+                      className="shweta-mobile-link"
+                      onClick={closeMenu}
                     >
-                      <Link
-                        href={link.href}
-                        onClick={close}
-                      >
-                        {link.label}
-                      </Link>
-                    </motion.div>
-                  )
-                )}
+                      <span>{link.label}</span>
 
-                {/* =========================================
-                    MOBILE PHONE
-                ========================================== */}
+                      <FiChevronRight />
+                    </Link>
+                  </motion.div>
+                ))}
+              </nav>
 
-                <motion.a
-                  className="nav-call"
+              {/* MOBILE CONTACT BUTTONS */}
+
+              <div className="shweta-mobile-actions">
+
+                <a
                   href={`tel:${PHONE_LINK}`}
-                  onClick={close}
-                  initial={{
-                    opacity: 0,
-                    x: -20,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    x: 0,
-                  }}
-                  transition={{
-                    delay:
-                      0.05 +
-                      links.length * 0.06,
-                  }}
-                  aria-label={`Call ${PHONE_NUMBER}`}
+                  className="shweta-mobile-call"
+                  onClick={closeMenu}
                 >
                   <FiPhone />
 
                   <span>
                     Call {PHONE_NUMBER}
                   </span>
-                </motion.a>
+                </a>
 
-                {/* =========================================
-                    MOBILE WHATSAPP
-                ========================================== */}
-
-                <motion.a
-                  className="nav-whatsapp"
+                <a
                   href={WHATSAPP_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={close}
-                  initial={{
-                    opacity: 0,
-                    x: -20,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    x: 0,
-                  }}
-                  transition={{
-                    delay:
-                      0.1 +
-                      links.length * 0.06,
-                  }}
-                  aria-label="Chat on WhatsApp"
+                  className="shweta-mobile-whatsapp"
+                  onClick={closeMenu}
                 >
                   <FaWhatsapp />
 
                   <span>
                     WhatsApp
                   </span>
-                </motion.a>
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>
-      </motion.header>
+                </a>
+
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* =====================================================
-          NAVBAR-SPECIFIC CSS
+          NAVBAR CSS
       ====================================================== */}
 
       <style jsx>{`
 
-        /* ===================================================
+        /* =====================================================
            HEADER
-        ==================================================== */
+        ====================================================== */
 
-        .site-header {
+        .shweta-navbar {
           position: fixed;
           top: 0;
           left: 0;
           right: 0;
-          z-index: 1000;
+
+          z-index: 99990;
+
           width: 100%;
-          border-bottom:
-            1px solid
-            rgba(185, 239, 57, 0.10);
-          color: #ffffff;
+
+          background: rgba(4, 27, 21, 0.82);
+
+          border-bottom: 1px solid
+            rgba(255, 255, 255, 0.08);
+
+          backdrop-filter: blur(16px);
+
           transition:
-            background-color .3s ease,
-            box-shadow .3s ease;
+            background 0.3s ease,
+            box-shadow 0.3s ease;
         }
 
-        /* ===================================================
-           NAV
-        ==================================================== */
+        .shweta-navbar-scrolled {
+          background: rgba(4, 27, 21, 0.97);
 
-        .nav {
-          position: relative;
+          box-shadow:
+            0 10px 35px rgba(0, 0, 0, 0.16);
+        }
+
+        /* =====================================================
+           CONTAINER
+        ====================================================== */
+
+        .shweta-navbar-container {
+          width: 100%;
+          max-width: 1500px;
+
+          min-height: 86px;
+
+          margin: 0 auto;
+
+          padding: 0 45px;
+
           display: flex;
           align-items: center;
           justify-content: space-between;
-          min-height: 70px;
+
+          gap: 30px;
         }
 
-        /* ===================================================
+        /* =====================================================
            BRAND
-        ==================================================== */
+        ====================================================== */
 
-        .brand {
-          display: inline-flex;
+        .shweta-navbar-brand {
+          display: flex;
           align-items: center;
+
           gap: 12px;
+
           color: #ffffff;
+
           text-decoration: none;
+
+          flex-shrink: 0;
         }
 
-        .brand-mark {
+        .shweta-navbar-logo {
+          width: 50px;
+          height: 50px;
+
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 45px;
-          height: 45px;
-          flex: 0 0 45px;
-          border:
-            1px solid
-            rgba(185, 239, 57, 0.75);
-          border-radius: 13px;
-          background:
-            rgba(10, 45, 35, 0.85);
+
+          border: 1px solid
+            rgba(185, 239, 57, 0.8);
+
+          border-radius: 14px;
+
+          background: rgba(185, 239, 57, 0.08);
+
           color: #b9ef39;
-          font-family:
-            Georgia,
-            serif;
-          font-size: 22px;
+
+          font-family: Georgia, serif;
+
+          font-size: 24px;
           font-weight: 700;
+
           box-shadow:
-            0 0 25px
-            rgba(185, 239, 57, 0.16);
+            0 0 25px rgba(185, 239, 57, 0.1);
         }
 
-        .brand-text {
+        .shweta-navbar-brand-text {
           display: flex;
           flex-direction: column;
         }
 
-        .brand-text > span {
-          color: #ffffff;
-          font-size: 17px;
-          font-weight: 800;
+        .shweta-navbar-brand-text strong {
+          font-size: 18px;
           line-height: 1.1;
-          letter-spacing: -.4px;
+          font-weight: 800;
+          white-space: nowrap;
         }
 
-        .brand-text b {
+        .shweta-navbar-brand-text strong span {
           color: #b9ef39;
         }
 
-        .brand-tagline {
+        .shweta-navbar-brand-text small {
           margin-top: 5px;
-          color:
-            rgba(255, 255, 255, 0.58);
+
+          color: rgba(255, 255, 255, 0.52);
+
           font-size: 8px;
           font-weight: 700;
-          letter-spacing: 1.4px;
-          text-transform: uppercase;
+
+          letter-spacing: 1.6px;
+
+          white-space: nowrap;
         }
 
-        /* ===================================================
-           DESKTOP LINKS
-        ==================================================== */
+        /* =====================================================
+           DESKTOP NAV
+        ====================================================== */
 
-        .nav-links {
+        .shweta-desktop-nav {
           display: flex;
           align-items: center;
-          gap: 31px;
+          justify-content: center;
+
+          gap: 30px;
+
+          flex: 1;
         }
 
-        .nav-links > div {
-          display: flex;
-        }
-
-        .nav-links a {
+        .shweta-nav-link {
           position: relative;
-          color:
-            rgba(255, 255, 255, 0.82);
-          font-size: 13px;
+
+          color: rgba(255, 255, 255, 0.55);
+
+          font-size: 14px;
           font-weight: 700;
+
           text-decoration: none;
+
           transition:
-            color .25s ease;
+            color 0.25s ease;
         }
 
-        .nav-links a:not(.nav-call):not(.nav-whatsapp)::after {
-          position: absolute;
-          left: 0;
-          right: 0;
-          bottom: -8px;
-          height: 2px;
-          border-radius: 999px;
-          background: #b9ef39;
+        .shweta-nav-link::after {
           content: "";
-          transform:
-            scaleX(0);
-          transform-origin: center;
-          transition:
-            transform .25s ease;
+
+          position: absolute;
+
+          left: 0;
+          bottom: -8px;
+
+          width: 0;
+          height: 2px;
+
+          background: #b9ef39;
+
+          transition: width 0.25s ease;
         }
 
-        .nav-links a:not(.nav-call):not(.nav-whatsapp):hover {
+        .shweta-nav-link:hover {
           color: #b9ef39;
         }
 
-        .nav-links a:not(.nav-call):not(.nav-whatsapp):hover::after {
-          transform:
-            scaleX(1);
+        .shweta-nav-link:hover::after {
+          width: 100%;
         }
 
-        /* ===================================================
-           CALL BUTTON
-        ==================================================== */
+        /* =====================================================
+           PHONE
+        ====================================================== */
 
-        .nav-call {
-          display: inline-flex !important;
+        .shweta-navbar-phone {
+          display: flex;
           align-items: center;
           justify-content: center;
-          gap: 8px;
-          min-height: 44px;
-          padding:
-            0
-            17px;
-          border:
-            1px solid
-            rgba(185, 239, 57, 0.75);
+
+          gap: 9px;
+
+          min-height: 50px;
+
+          padding: 0 22px;
+
+          border: 1px solid
+            rgba(185, 239, 57, 0.65);
+
           border-radius: 999px;
-          background:
-            rgba(185, 239, 57, 0.07);
-          color: #b9ef39 !important;
-          font-weight: 800 !important;
+
+          color: #b9ef39;
+
+          font-size: 14px;
+          font-weight: 800;
+
+          text-decoration: none;
+
           transition:
-            background .25s ease,
-            transform .25s ease,
-            box-shadow .25s ease;
+            background 0.25s ease,
+            transform 0.25s ease;
         }
 
-        .nav-call svg {
-          font-size: 15px;
+        .shweta-navbar-phone svg {
+          width: 17px;
+          height: 17px;
         }
 
-        .nav-call:hover {
-          background:
-            #b9ef39;
-          color:
-            #072019 !important;
-          transform:
-            translateY(-2px);
-          box-shadow:
-            0 8px 25px
-            rgba(185, 239, 57, .18);
+        .shweta-navbar-phone:hover {
+          background: rgba(185, 239, 57, 0.1);
+
+          transform: translateY(-2px);
         }
 
-        /* ===================================================
-           WHATSAPP
-        ==================================================== */
+        /* =====================================================
+           MOBILE BUTTON
+        ====================================================== */
 
-        .nav-whatsapp {
-          display: inline-flex !important;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          min-height: 44px;
-          padding: 0 18px;
-          border-radius: 999px;
-          background: #25d366;
-          color: #ffffff !important;
-          font-weight: 800 !important;
-          box-shadow:
-            0 8px 25px
-            rgba(37, 211, 102, .18);
-        }
-
-        .nav-whatsapp svg {
-          font-size: 18px;
-        }
-
-        /* ===================================================
-           MOBILE MENU BUTTON
-        ==================================================== */
-
-        .mobile-menu {
+        .shweta-mobile-menu-button {
           display: none;
+
+          width: 48px;
+          height: 48px;
+
           align-items: center;
           justify-content: center;
-          width: 44px;
-          height: 44px;
-          padding: 0;
-          border:
-            1px solid
-            rgba(255, 255, 255, 0.18);
-          border-radius: 10px;
-          background:
-            rgba(255, 255, 255, .05);
-          color: #ffffff;
+
+          border: 1px solid
+            rgba(185, 239, 57, 0.4);
+
+          border-radius: 12px;
+
+          background: rgba(255, 255, 255, 0.05);
+
+          color: #b9ef39;
+
           cursor: pointer;
-          font-size: 22px;
         }
 
-        .mobile-menu:hover {
-          border-color:
-            rgba(185, 239, 57, .5);
-          color:
-            #b9ef39;
+        .shweta-mobile-menu-button svg {
+          width: 25px;
+          height: 25px;
         }
 
-        /* ===================================================
+        /* =====================================================
            MOBILE BACKDROP
-        ==================================================== */
+        ====================================================== */
 
-        .mobile-menu-backdrop {
+        .shweta-mobile-backdrop {
           position: fixed;
-          inset: 70px 0 0;
-          z-index: -1;
-          background:
-            rgba(0, 10, 8, .55);
-          backdrop-filter:
-            blur(3px);
+
+          inset: 0;
+
+          z-index: 99991;
+
+          background: rgba(0, 0, 0, 0.55);
+
+          backdrop-filter: blur(4px);
         }
 
-        /* ===================================================
+        /* =====================================================
            MOBILE MENU
-        ==================================================== */
+        ====================================================== */
 
-        @media (max-width: 850px) {
+        .shweta-mobile-menu {
+          position: fixed;
 
-          .nav {
-            min-height: 68px;
+          top: 92px;
+          left: 15px;
+          right: 15px;
+
+          z-index: 99992;
+
+          max-height: calc(100vh - 110px);
+
+          overflow-y: auto;
+
+          padding: 20px;
+
+          border: 1px solid
+            rgba(185, 239, 57, 0.18);
+
+          border-radius: 20px;
+
+          background: #071e18;
+
+          box-shadow:
+            0 25px 70px rgba(0, 0, 0, 0.4);
+        }
+
+        /* =====================================================
+           MOBILE HEADER
+        ====================================================== */
+
+        .shweta-mobile-menu-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          padding-bottom: 18px;
+
+          border-bottom: 1px solid
+            rgba(255, 255, 255, 0.1);
+        }
+
+        .shweta-mobile-menu-header div {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .shweta-mobile-menu-header strong {
+          color: #ffffff;
+
+          font-size: 20px;
+          font-weight: 800;
+        }
+
+        .shweta-mobile-menu-header span {
+          margin-top: 4px;
+
+          color: rgba(255, 255, 255, 0.5);
+
+          font-size: 11px;
+        }
+
+        .shweta-mobile-close {
+          width: 42px;
+          height: 42px;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          border: 1px solid
+            rgba(255, 255, 255, 0.12);
+
+          border-radius: 10px;
+
+          background: rgba(255, 255, 255, 0.05);
+
+          color: #ffffff;
+
+          cursor: pointer;
+        }
+
+        .shweta-mobile-close svg {
+          width: 22px;
+          height: 22px;
+        }
+
+        /* =====================================================
+           MOBILE LINKS
+        ====================================================== */
+
+        .shweta-mobile-links {
+          display: flex;
+          flex-direction: column;
+
+          padding: 12px 0;
+        }
+
+        .shweta-mobile-link {
+          width: 100%;
+
+          min-height: 56px;
+
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          padding: 0 10px;
+
+          border-bottom: 1px solid
+            rgba(255, 255, 255, 0.07);
+
+          color: #ffffff;
+
+          font-size: 16px;
+          font-weight: 700;
+
+          text-decoration: none;
+
+          transition:
+            color 0.2s ease,
+            padding 0.2s ease;
+        }
+
+        .shweta-mobile-link svg {
+          color: #b9ef39;
+
+          width: 19px;
+          height: 19px;
+
+          transition:
+            transform 0.2s ease;
+        }
+
+        .shweta-mobile-link:hover {
+          color: #b9ef39;
+
+          padding-left: 16px;
+        }
+
+        .shweta-mobile-link:hover svg {
+          transform: translateX(4px);
+        }
+
+        /* =====================================================
+           MOBILE ACTIONS
+        ====================================================== */
+
+        .shweta-mobile-actions {
+          display: grid;
+
+          grid-template-columns: 1fr 1fr;
+
+          gap: 10px;
+
+          margin-top: 10px;
+        }
+
+        .shweta-mobile-call,
+        .shweta-mobile-whatsapp {
+          min-height: 52px;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          gap: 8px;
+
+          border-radius: 12px;
+
+          color: #ffffff;
+
+          font-size: 13px;
+          font-weight: 800;
+
+          text-decoration: none;
+        }
+
+        .shweta-mobile-call {
+          background: #124237;
+
+          border: 1px solid
+            rgba(185, 239, 57, 0.3);
+        }
+
+        .shweta-mobile-whatsapp {
+          background: #25d366;
+        }
+
+        .shweta-mobile-call svg,
+        .shweta-mobile-whatsapp svg {
+          width: 19px;
+          height: 19px;
+        }
+
+        /* =====================================================
+           TABLET
+        ====================================================== */
+
+        @media (max-width: 1100px) {
+          .shweta-navbar-container {
+            padding: 0 25px;
           }
 
-          .mobile-menu {
-            display: flex;
+          .shweta-desktop-nav {
+            gap: 18px;
           }
 
-          .nav > .nav-links {
-            display: none;
+          .shweta-nav-link {
+            font-size: 13px;
           }
 
-          .nav-links.is-open {
-            position: fixed;
-            top: 68px;
-            left: 15px;
-            right: 15px;
-            z-index: 1001;
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            gap: 4px;
-            padding: 14px;
-            border:
-              1px solid
-              rgba(185, 239, 57, .15);
-            border-radius: 18px;
-            background:
-              rgba(5, 29, 23, .98);
-            box-shadow:
-              0 25px 70px
-              rgba(0, 0, 0, .35);
-            backdrop-filter:
-              blur(18px);
-          }
-
-          .nav-links.is-open > div {
-            display: block;
-          }
-
-          .nav-links.is-open a:not(.nav-call):not(.nav-whatsapp) {
-            display: flex;
-            align-items: center;
-            min-height: 48px;
-            padding: 0 14px;
-            border-radius: 10px;
-          }
-
-          .nav-links.is-open a:not(.nav-call):not(.nav-whatsapp):hover {
-            background:
-              rgba(185, 239, 57, .08);
-          }
-
-          .nav-links.is-open
-          a:not(.nav-call):not(.nav-whatsapp)::after {
-            display: none;
-          }
-
-          .nav-links.is-open .nav-call,
-          .nav-links.is-open .nav-whatsapp {
-            width: 100%;
-            margin-top: 5px;
+          .shweta-navbar-phone {
+            padding: 0 16px;
           }
         }
 
-        /* ===================================================
-           SMALL MOBILE
-        ==================================================== */
+        /* =====================================================
+           MOBILE
+        ====================================================== */
 
-        @media (max-width: 500px) {
+        @media (max-width: 900px) {
+          .shweta-navbar-container {
+            min-height: 76px;
 
-          .nav {
-            padding-left: 15px;
-            padding-right: 15px;
+            padding: 0 18px;
           }
 
-          .brand-mark {
+          .shweta-desktop-nav,
+          .shweta-navbar-phone {
+            display: none;
+          }
+
+          .shweta-mobile-menu-button {
+            display: flex;
+          }
+
+          .shweta-navbar-logo {
+            width: 45px;
+            height: 45px;
+
+            flex-basis: 45px;
+          }
+
+          .shweta-navbar-brand-text strong {
+            font-size: 16px;
+          }
+
+          .shweta-navbar-brand-text small {
+            font-size: 6.5px;
+
+            letter-spacing: 1.2px;
+          }
+        }
+
+        /* =====================================================
+           SMALL MOBILE
+        ====================================================== */
+
+        @media (max-width: 480px) {
+          .shweta-navbar-container {
+            padding: 0 13px;
+          }
+
+          .shweta-navbar-logo {
             width: 42px;
             height: 42px;
+
             flex-basis: 42px;
           }
 
-          .brand-text > span {
+          .shweta-navbar-brand-text strong {
             font-size: 15px;
           }
 
-          .brand-tagline {
+          .shweta-navbar-brand-text small {
             font-size: 6px;
-            letter-spacing: 1px;
           }
 
-          .nav-links.is-open {
+          .shweta-mobile-menu {
+            top: 82px;
+
             left: 10px;
             right: 10px;
+
+            padding: 16px;
+          }
+
+          .shweta-mobile-actions {
+            grid-template-columns: 1fr;
           }
         }
-
-        /* ===================================================
-           REDUCED MOTION
-        ==================================================== */
-
-        @media (prefers-reduced-motion: reduce) {
-          .site-header,
-          .nav-links a,
-          .nav-call,
-          .mobile-menu {
-            transition: none;
-          }
-        }
-
       `}</style>
     </>
   );
