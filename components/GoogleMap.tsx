@@ -35,8 +35,8 @@ export function GoogleMap() {
             <FiPhone />
             <div>
               <strong>Call / WhatsApp:</strong>
-              <a href="tel:+918229006831" style={{ color: "var(--ink)", fontWeight: 700 }}>
-                +91 8229006831
+              <a href="tel:+91065953252" style={{ color: "var(--ink)", fontWeight: 700 }}>
+                +91 065953252
               </a>
             </div>
           </div>
