@@ -9,19 +9,13 @@ const PHONE_LINK = "+917065953252";
 export function CallButton() {
   return (
     <motion.a
-      className="floating-button call-button"
       href={`tel:${PHONE_LINK}`}
+      className="floating-button call-button"
       aria-label={`Call Shweta Invisible Grill at ${PHONE_NUMBER}`}
-      initial={{
-        scale: 0,
-        opacity: 0,
-      }}
-      animate={{
-        scale: 1,
-        opacity: 1,
-      }}
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
       transition={{
-        delay: 1,
+        delay: 0.8,
         type: "spring",
         stiffness: 260,
         damping: 20,
@@ -35,10 +29,7 @@ export function CallButton() {
       }}
     >
       <FiPhone aria-hidden="true" />
-
-      <span>
-        Call {PHONE_NUMBER}
-      </span>
+      <span>Call {PHONE_NUMBER}</span>
     </motion.a>
   );
 }
