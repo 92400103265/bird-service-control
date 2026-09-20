@@ -3,12 +3,14 @@
 import { motion } from "framer-motion";
 import { FaWhatsapp } from "react-icons/fa";
 
+const PHONE_NUMBER = "7065953252";
 const WHATSAPP_NUMBER = "917065953252";
 
+const WHATSAPP_MESSAGE =
+  "Hello Shweta Invisible Grill, I would like to get a free estimate for invisible grill / bird netting in Gurugram.";
+
 export function WhatsAppButton() {
-  const message = encodeURIComponent(
-    "Hello Shweta Invisible Grill, I would like to get a free estimate for invisible grill / bird netting in Gurugram."
-  );
+  const message = encodeURIComponent(WHATSAPP_MESSAGE);
 
   const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
 
@@ -18,7 +20,7 @@ export function WhatsAppButton() {
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Chat with Shweta Invisible Grill on WhatsApp"
+      aria-label={`Chat with Shweta Invisible Grill on WhatsApp at ${PHONE_NUMBER}`}
       initial={{
         scale: 0,
         opacity: 0,
@@ -35,12 +37,15 @@ export function WhatsAppButton() {
       }}
       whileHover={{
         scale: 1.05,
+        y: -3,
       }}
       whileTap={{
         scale: 0.95,
       }}
     >
-      <FaWhatsapp />
+      <FaWhatsapp
+        aria-hidden="true"
+      />
 
       <span>
         WhatsApp
