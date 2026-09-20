@@ -12,7 +12,7 @@ import {
 import { FaWhatsapp } from "react-icons/fa";
 
 /* =========================================================
-   CONTACT INFORMATION
+   CONTACT
 ========================================================= */
 
 const PHONE_NUMBER = "7065953252";
@@ -24,8 +24,8 @@ const WHATSAPP_MESSAGE =
   "Hello Shweta Invisible Grill, I would like to get a free estimate for invisible grill / bird netting in Gurugram.";
 
 const WHATSAPP_URL =
-  `https://wa.me/${WHATSAPP_NUMBER}` +
-  `?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
+  `https://wa.me/${WHATSAPP_NUMBER}?text=` +
+  encodeURIComponent(WHATSAPP_MESSAGE);
 
 /* =========================================================
    NAVIGATION
@@ -63,16 +63,16 @@ const NAV_LINKS = [
 ========================================================= */
 
 export function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   /* =======================================================
-     SCROLL DETECTION
+     SCROLL
   ======================================================= */
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 30);
+      setScrolled(window.scrollY > 20);
     };
 
     handleScroll();
@@ -85,29 +85,11 @@ export function Navbar() {
   }, []);
 
   /* =======================================================
-     CLOSE MENU WHEN SCREEN BECOMES DESKTOP
+     LOCK BODY WHEN MOBILE MENU IS OPEN
   ======================================================= */
 
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth > 900) {
-        setIsOpen(false);
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
-  /* =======================================================
-     PREVENT BODY SCROLL WHEN MENU OPEN
-  ======================================================= */
-
-  useEffect(() => {
-    if (isOpen) {
+    if (menuOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -116,24 +98,28 @@ export function Navbar() {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [isOpen]);
+  }, [menuOpen]);
 
   /* =======================================================
      CLOSE MENU
   ======================================================= */
 
   const closeMenu = () => {
-    setIsOpen(false);
+    setMenuOpen(false);
   };
 
   return (
     <>
+      {/* =====================================================
+          NAVBAR
+      ====================================================== */}
+
       <header
         className={`shweta-navbar ${
-          isScrolled ? "shweta-navbar-scrolled" : ""
+          scrolled ? "shweta-navbar-scrolled" : ""
         }`}
       >
-        <div className="shweta-navbar-container">
+        <div className="shweta-navbar-inner">
 
           {/* =================================================
               LOGO
@@ -141,15 +127,14 @@ export function Navbar() {
 
           <Link
             href="/"
-            className="shweta-navbar-brand"
+            className="shweta-navbar-logo-link"
             onClick={closeMenu}
-            aria-label="Shweta Invisible Grill Home"
           >
-            <span className="shweta-navbar-logo">
+            <div className="shweta-navbar-logo">
               S
-            </span>
+            </div>
 
-            <span className="shweta-navbar-brand-text">
+            <div className="shweta-navbar-brand">
               <strong>
                 Shweta <span>Invisible Grill</span>
               </strong>
@@ -157,7 +142,7 @@ export function Navbar() {
               <small>
                 SAFETY GRILLS & NETS • GURUGRAM
               </small>
-            </span>
+            </div>
           </Link>
 
           {/* =================================================
@@ -165,14 +150,14 @@ export function Navbar() {
           ================================================= */}
 
           <nav
-            className="shweta-desktop-nav"
+            className="shweta-desktop-navigation"
             aria-label="Main navigation"
           >
             {NAV_LINKS.map((link) => (
               <Link
-                key={link.href}
+                key={link.label}
                 href={link.href}
-                className="shweta-nav-link"
+                className="shweta-desktop-link"
               >
                 {link.label}
               </Link>
@@ -186,9 +171,9 @@ export function Navbar() {
           <a
             href={`tel:${PHONE_LINK}`}
             className="shweta-navbar-phone"
-            aria-label={`Call Shweta Invisible Grill at ${PHONE_NUMBER}`}
+            aria-label={`Call ${PHONE_NUMBER}`}
           >
-            <FiPhone aria-hidden="true" />
+            <FiPhone />
 
             <span>{PHONE_NUMBER}</span>
           </a>
@@ -199,18 +184,16 @@ export function Navbar() {
 
           <button
             type="button"
-            className="shweta-mobile-menu-button"
-            onClick={() => setIsOpen((previous) => !previous)}
+            className="shweta-menu-button"
+            onClick={() => setMenuOpen((value) => !value)}
             aria-label={
-              isOpen ? "Close navigation menu" : "Open navigation menu"
+              menuOpen
+                ? "Close navigation menu"
+                : "Open navigation menu"
             }
-            aria-expanded={isOpen}
+            aria-expanded={menuOpen}
           >
-            {isOpen ? (
-              <FiX aria-hidden="true" />
-            ) : (
-              <FiMenu aria-hidden="true" />
-            )}
+            {menuOpen ? <FiX /> : <FiMenu />}
           </button>
         </div>
       </header>
@@ -220,7 +203,7 @@ export function Navbar() {
       ====================================================== */}
 
       <AnimatePresence>
-        {isOpen && (
+        {menuOpen && (
           <>
             {/* BACKDROP */}
 
@@ -232,10 +215,10 @@ export function Navbar() {
               onClick={closeMenu}
             />
 
-            {/* MENU */}
+            {/* MOBILE PANEL */}
 
             <motion.div
-              className="shweta-mobile-menu"
+              className="shweta-mobile-panel"
               initial={{
                 opacity: 0,
                 y: -20,
@@ -252,9 +235,9 @@ export function Navbar() {
                 duration: 0.25,
               }}
             >
-              {/* MOBILE MENU HEADER */}
+              {/* PANEL HEADER */}
 
-              <div className="shweta-mobile-menu-header">
+              <div className="shweta-mobile-header">
                 <div>
                   <strong>Menu</strong>
 
@@ -265,23 +248,20 @@ export function Navbar() {
 
                 <button
                   type="button"
-                  onClick={closeMenu}
                   className="shweta-mobile-close"
+                  onClick={closeMenu}
                   aria-label="Close menu"
                 >
                   <FiX />
                 </button>
               </div>
 
-              {/* MOBILE LINKS */}
+              {/* LINKS */}
 
-              <nav
-                className="shweta-mobile-links"
-                aria-label="Mobile navigation"
-              >
+              <nav className="shweta-mobile-navigation">
                 {NAV_LINKS.map((link, index) => (
                   <motion.div
-                    key={link.href}
+                    key={link.label}
                     initial={{
                       opacity: 0,
                       x: -15,
@@ -307,7 +287,7 @@ export function Navbar() {
                 ))}
               </nav>
 
-              {/* MOBILE CONTACT BUTTONS */}
+              {/* MOBILE ACTIONS */}
 
               <div className="shweta-mobile-actions">
 
@@ -350,7 +330,7 @@ export function Navbar() {
       <style jsx>{`
 
         /* =====================================================
-           HEADER
+           NAVBAR
         ====================================================== */
 
         .shweta-navbar {
@@ -359,16 +339,16 @@ export function Navbar() {
           left: 0;
           right: 0;
 
-          z-index: 99990;
-
           width: 100%;
 
-          background: rgba(4, 27, 21, 0.82);
+          z-index: 100000;
+
+          background: rgba(4, 27, 21, 0.96);
 
           border-bottom: 1px solid
-            rgba(255, 255, 255, 0.08);
+            rgba(185, 239, 57, 0.18);
 
-          backdrop-filter: blur(16px);
+          backdrop-filter: blur(18px);
 
           transition:
             background 0.3s ease,
@@ -376,96 +356,98 @@ export function Navbar() {
         }
 
         .shweta-navbar-scrolled {
-          background: rgba(4, 27, 21, 0.97);
+          background: rgba(3, 22, 17, 0.99);
 
           box-shadow:
-            0 10px 35px rgba(0, 0, 0, 0.16);
+            0 8px 30px rgba(0, 0, 0, 0.22);
         }
 
         /* =====================================================
-           CONTAINER
+           INNER
         ====================================================== */
 
-        .shweta-navbar-container {
+        .shweta-navbar-inner {
           width: 100%;
           max-width: 1500px;
 
-          min-height: 86px;
+          min-height: 88px;
 
           margin: 0 auto;
 
-          padding: 0 45px;
+          padding: 0 48px;
 
           display: flex;
           align-items: center;
-          justify-content: space-between;
 
           gap: 30px;
         }
 
         /* =====================================================
-           BRAND
+           LOGO LINK
         ====================================================== */
 
-        .shweta-navbar-brand {
+        .shweta-navbar-logo-link {
           display: flex;
           align-items: center;
 
           gap: 12px;
 
-          color: #ffffff;
+          flex-shrink: 0;
 
           text-decoration: none;
 
-          flex-shrink: 0;
+          color: #ffffff;
         }
 
         .shweta-navbar-logo {
-          width: 50px;
-          height: 50px;
+          width: 52px;
+          height: 52px;
 
           display: flex;
           align-items: center;
           justify-content: center;
 
-          border: 1px solid
-            rgba(185, 239, 57, 0.8);
+          border: 1px solid #b9ef39;
 
-          border-radius: 14px;
+          border-radius: 15px;
 
-          background: rgba(185, 239, 57, 0.08);
+          background: #102d24;
 
           color: #b9ef39;
 
           font-family: Georgia, serif;
 
-          font-size: 24px;
+          font-size: 26px;
           font-weight: 700;
 
           box-shadow:
-            0 0 25px rgba(185, 239, 57, 0.1);
+            0 0 18px rgba(185, 239, 57, 0.12);
         }
 
-        .shweta-navbar-brand-text {
+        .shweta-navbar-brand {
           display: flex;
           flex-direction: column;
         }
 
-        .shweta-navbar-brand-text strong {
-          font-size: 18px;
+        .shweta-navbar-brand strong {
+          color: #ffffff;
+
+          font-size: 19px;
           line-height: 1.1;
+
           font-weight: 800;
+
           white-space: nowrap;
         }
 
-        .shweta-navbar-brand-text strong span {
+        .shweta-navbar-brand strong span {
           color: #b9ef39;
         }
 
-        .shweta-navbar-brand-text small {
+        .shweta-navbar-brand small {
           margin-top: 5px;
 
-          color: rgba(255, 255, 255, 0.52);
+          color: rgba(255, 255, 255, 0.68);
 
           font-size: 8px;
           font-weight: 700;
@@ -476,54 +458,60 @@ export function Navbar() {
         }
 
         /* =====================================================
-           DESKTOP NAV
+           DESKTOP NAVIGATION
         ====================================================== */
 
-        .shweta-desktop-nav {
+        .shweta-desktop-navigation {
+          flex: 1;
+
           display: flex;
           align-items: center;
           justify-content: center;
 
-          gap: 30px;
-
-          flex: 1;
+          gap: 32px;
         }
 
-        .shweta-nav-link {
+        .shweta-desktop-link {
           position: relative;
 
-          color: rgba(255, 255, 255, 0.55);
+          color: #ffffff;
 
-          font-size: 14px;
-          font-weight: 700;
+          font-size: 15px;
+          font-weight: 600;
 
           text-decoration: none;
+
+          padding: 10px 0;
 
           transition:
             color 0.25s ease;
         }
 
-        .shweta-nav-link::after {
+        .shweta-desktop-link::after {
           content: "";
 
           position: absolute;
 
           left: 0;
-          bottom: -8px;
+          right: 0;
+          bottom: 0;
+
+          height: 2px;
 
           width: 0;
-          height: 2px;
+
+          margin: auto;
 
           background: #b9ef39;
 
           transition: width 0.25s ease;
         }
 
-        .shweta-nav-link:hover {
+        .shweta-desktop-link:hover {
           color: #b9ef39;
         }
 
-        .shweta-nav-link:hover::after {
+        .shweta-desktop-link:hover::after {
           width: 100%;
         }
 
@@ -532,27 +520,30 @@ export function Navbar() {
         ====================================================== */
 
         .shweta-navbar-phone {
+          min-height: 56px;
+
+          padding: 0 24px;
+
           display: flex;
           align-items: center;
           justify-content: center;
 
           gap: 9px;
 
-          min-height: 50px;
-
-          padding: 0 22px;
-
-          border: 1px solid
-            rgba(185, 239, 57, 0.65);
+          border: 1px solid #b9ef39;
 
           border-radius: 999px;
 
+          background: rgba(185, 239, 57, 0.06);
+
           color: #b9ef39;
 
-          font-size: 14px;
+          font-size: 15px;
           font-weight: 800;
 
           text-decoration: none;
+
+          white-space: nowrap;
 
           transition:
             background 0.25s ease,
@@ -560,48 +551,55 @@ export function Navbar() {
         }
 
         .shweta-navbar-phone svg {
-          width: 17px;
-          height: 17px;
+          width: 18px;
+          height: 18px;
         }
 
         .shweta-navbar-phone:hover {
-          background: rgba(185, 239, 57, 0.1);
+          background: rgba(185, 239, 57, 0.15);
 
           transform: translateY(-2px);
         }
 
         /* =====================================================
-           MOBILE BUTTON
+           MOBILE MENU BUTTON
         ====================================================== */
 
-        .shweta-mobile-menu-button {
+        .shweta-menu-button {
           display: none;
 
-          width: 48px;
-          height: 48px;
+          width: 52px;
+          height: 52px;
 
           align-items: center;
           justify-content: center;
 
-          border: 1px solid
-            rgba(185, 239, 57, 0.4);
+          margin-left: auto;
 
-          border-radius: 12px;
+          border: 2px solid #b9ef39;
 
-          background: rgba(255, 255, 255, 0.05);
+          border-radius: 13px;
+
+          background: #102d24;
 
           color: #b9ef39;
 
           cursor: pointer;
+
+          z-index: 100002;
         }
 
-        .shweta-mobile-menu-button svg {
-          width: 25px;
-          height: 25px;
+        .shweta-menu-button svg {
+          width: 28px;
+          height: 28px;
+        }
+
+        .shweta-menu-button:hover {
+          background: #163b2e;
         }
 
         /* =====================================================
-           MOBILE BACKDROP
+           BACKDROP
         ====================================================== */
 
         .shweta-mobile-backdrop {
@@ -609,48 +607,48 @@ export function Navbar() {
 
           inset: 0;
 
-          z-index: 99991;
+          z-index: 100001;
 
-          background: rgba(0, 0, 0, 0.55);
+          background: rgba(0, 0, 0, 0.62);
 
-          backdrop-filter: blur(4px);
+          backdrop-filter: blur(5px);
         }
 
         /* =====================================================
-           MOBILE MENU
+           MOBILE PANEL
         ====================================================== */
 
-        .shweta-mobile-menu {
+        .shweta-mobile-panel {
           position: fixed;
 
-          top: 92px;
+          top: 96px;
           left: 15px;
           right: 15px;
 
-          z-index: 99992;
+          z-index: 100003;
 
-          max-height: calc(100vh - 110px);
+          max-height: calc(100vh - 115px);
 
           overflow-y: auto;
 
           padding: 20px;
 
           border: 1px solid
-            rgba(185, 239, 57, 0.18);
+            rgba(185, 239, 57, 0.25);
 
           border-radius: 20px;
 
-          background: #071e18;
+          background: #061f18;
 
           box-shadow:
-            0 25px 70px rgba(0, 0, 0, 0.4);
+            0 25px 70px rgba(0, 0, 0, 0.5);
         }
 
         /* =====================================================
            MOBILE HEADER
         ====================================================== */
 
-        .shweta-mobile-menu-header {
+        .shweta-mobile-header {
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -658,43 +656,42 @@ export function Navbar() {
           padding-bottom: 18px;
 
           border-bottom: 1px solid
-            rgba(255, 255, 255, 0.1);
+            rgba(255, 255, 255, 0.12);
         }
 
-        .shweta-mobile-menu-header div {
+        .shweta-mobile-header div {
           display: flex;
           flex-direction: column;
         }
 
-        .shweta-mobile-menu-header strong {
+        .shweta-mobile-header strong {
           color: #ffffff;
 
-          font-size: 20px;
-          font-weight: 800;
+          font-size: 21px;
         }
 
-        .shweta-mobile-menu-header span {
+        .shweta-mobile-header span {
           margin-top: 4px;
 
-          color: rgba(255, 255, 255, 0.5);
+          color: #b9ef39;
 
           font-size: 11px;
         }
 
         .shweta-mobile-close {
-          width: 42px;
-          height: 42px;
+          width: 44px;
+          height: 44px;
 
           display: flex;
           align-items: center;
           justify-content: center;
 
           border: 1px solid
-            rgba(255, 255, 255, 0.12);
+            rgba(185, 239, 57, 0.45);
 
           border-radius: 10px;
 
-          background: rgba(255, 255, 255, 0.05);
+          background: #102d24;
 
           color: #ffffff;
 
@@ -702,25 +699,20 @@ export function Navbar() {
         }
 
         .shweta-mobile-close svg {
-          width: 22px;
-          height: 22px;
+          width: 23px;
+          height: 23px;
         }
 
         /* =====================================================
-           MOBILE LINKS
+           MOBILE NAVIGATION
         ====================================================== */
 
-        .shweta-mobile-links {
-          display: flex;
-          flex-direction: column;
-
+        .shweta-mobile-navigation {
           padding: 12px 0;
         }
 
         .shweta-mobile-link {
-          width: 100%;
-
-          min-height: 56px;
+          min-height: 58px;
 
           display: flex;
           align-items: center;
@@ -729,11 +721,11 @@ export function Navbar() {
           padding: 0 10px;
 
           border-bottom: 1px solid
-            rgba(255, 255, 255, 0.07);
+            rgba(255, 255, 255, 0.08);
 
           color: #ffffff;
 
-          font-size: 16px;
+          font-size: 17px;
           font-weight: 700;
 
           text-decoration: none;
@@ -746,21 +738,15 @@ export function Navbar() {
         .shweta-mobile-link svg {
           color: #b9ef39;
 
-          width: 19px;
-          height: 19px;
-
-          transition:
-            transform 0.2s ease;
+          width: 20px;
+          height: 20px;
         }
 
-        .shweta-mobile-link:hover {
+        .shweta-mobile-link:hover,
+        .shweta-mobile-link:active {
           color: #b9ef39;
 
-          padding-left: 16px;
-        }
-
-        .shweta-mobile-link:hover svg {
-          transform: translateX(4px);
+          padding-left: 17px;
         }
 
         /* =====================================================
@@ -774,12 +760,12 @@ export function Navbar() {
 
           gap: 10px;
 
-          margin-top: 10px;
+          margin-top: 12px;
         }
 
         .shweta-mobile-call,
         .shweta-mobile-whatsapp {
-          min-height: 52px;
+          min-height: 54px;
 
           display: flex;
           align-items: center;
@@ -801,7 +787,7 @@ export function Navbar() {
           background: #124237;
 
           border: 1px solid
-            rgba(185, 239, 57, 0.3);
+            rgba(185, 239, 57, 0.35);
         }
 
         .shweta-mobile-whatsapp {
@@ -810,8 +796,8 @@ export function Navbar() {
 
         .shweta-mobile-call svg,
         .shweta-mobile-whatsapp svg {
-          width: 19px;
-          height: 19px;
+          width: 20px;
+          height: 20px;
         }
 
         /* =====================================================
@@ -819,20 +805,20 @@ export function Navbar() {
         ====================================================== */
 
         @media (max-width: 1100px) {
-          .shweta-navbar-container {
+          .shweta-navbar-inner {
             padding: 0 25px;
           }
 
-          .shweta-desktop-nav {
-            gap: 18px;
+          .shweta-desktop-navigation {
+            gap: 20px;
           }
 
-          .shweta-nav-link {
+          .shweta-desktop-link {
             font-size: 13px;
           }
 
           .shweta-navbar-phone {
-            padding: 0 16px;
+            padding: 0 17px;
           }
         }
 
@@ -841,33 +827,31 @@ export function Navbar() {
         ====================================================== */
 
         @media (max-width: 900px) {
-          .shweta-navbar-container {
+          .shweta-navbar-inner {
             min-height: 76px;
 
             padding: 0 18px;
           }
 
-          .shweta-desktop-nav,
+          .shweta-desktop-navigation,
           .shweta-navbar-phone {
             display: none;
           }
 
-          .shweta-mobile-menu-button {
+          .shweta-menu-button {
             display: flex;
           }
 
           .shweta-navbar-logo {
-            width: 45px;
-            height: 45px;
-
-            flex-basis: 45px;
+            width: 46px;
+            height: 46px;
           }
 
-          .shweta-navbar-brand-text strong {
+          .shweta-navbar-brand strong {
             font-size: 16px;
           }
 
-          .shweta-navbar-brand-text small {
+          .shweta-navbar-brand small {
             font-size: 6.5px;
 
             letter-spacing: 1.2px;
@@ -879,26 +863,29 @@ export function Navbar() {
         ====================================================== */
 
         @media (max-width: 480px) {
-          .shweta-navbar-container {
-            padding: 0 13px;
+          .shweta-navbar-inner {
+            padding: 0 12px;
           }
 
           .shweta-navbar-logo {
-            width: 42px;
-            height: 42px;
-
-            flex-basis: 42px;
+            width: 43px;
+            height: 43px;
           }
 
-          .shweta-navbar-brand-text strong {
+          .shweta-navbar-brand strong {
             font-size: 15px;
           }
 
-          .shweta-navbar-brand-text small {
+          .shweta-navbar-brand small {
             font-size: 6px;
           }
 
-          .shweta-mobile-menu {
+          .shweta-menu-button {
+            width: 48px;
+            height: 48px;
+          }
+
+          .shweta-mobile-panel {
             top: 82px;
 
             left: 10px;
