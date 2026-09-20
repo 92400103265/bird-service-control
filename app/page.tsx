@@ -23,8 +23,12 @@ export default function HomePage() {
         <section className="contact-section section" id="contact">
           <div className="section-heading contact-heading">
             <span className="eyebrow">Get a free estimate</span>
-            <h2>Let&apos;s make your space <em>safer.</em></h2>
-            <p>Tell us about your requirement and our Rajkot team will get back to you shortly.</p>
+            <h2>
+              Let&apos;s make your space <em>safer.</em>
+            </h2>
+            <p>
+              Tell us about your requirement and our Gurugram team at Shweta Invisible Grill will get back to you with a free on-site quote.
+            </p>
           </div>
           <ContactForm />
         </section>
